@@ -2,27 +2,27 @@ package sqrrl.BingMapsWebRequest;
 
 public class Waypoint {
 
-		int latitude, longitude;
+		double latitude, longitude;
 		String address;
 		public Waypoint(){
 			latitude=0; //defaults
 			longitude=0;
 			
 		}
-		public void setGPS(int lat, int lon)
+		public void setGPS(double d, double e)
 		{
-			latitude=lat;
-			longitude=lon;
+			latitude=d;
+			longitude=e;
 		}
 		public void setAddress(String add)
 		{
 			address=add;
 		}
-		public int getLatitude()
+		public double getLatitude()
 		{
 			return latitude;
 		}
-		public int getLongitude()
+		public double getLongitude()
 		{
 			return longitude;
 		}

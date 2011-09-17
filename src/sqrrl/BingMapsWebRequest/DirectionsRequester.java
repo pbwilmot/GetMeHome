@@ -2,7 +2,6 @@ package sqrrl.BingMapsWebRequest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,14 +14,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class DirectionsRequest {
+public class DirectionsRequester {
 	
 	private Waypoint start;
 	private Waypoint destination;
 	private String apikey;
 	private Date date;
-	private String drive, walk, transit;
-	public DirectionsRequest(Waypoint a, Waypoint b, Date d, String api)
+	public DirectionsRequester(Waypoint a, Waypoint b, Date d, String api)
 	{
 		this.setStart(a);
 		this.setDestination(b);
@@ -41,20 +39,8 @@ public class DirectionsRequest {
 	public void setDestination(Waypoint b) {
 		this.destination = b;
 	}
-	public String getDriveResponse()
-	{
-		return drive;
-	}
-	public String getWalkResponse()
-	{
-		return walk;
-	}
-	public String getTransitResponse()
-	{
-		return transit;
-	}
 	
-	private String makeRequest(String type)
+	public String makeRequest(String type)
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 
@@ -82,25 +68,19 @@ public class DirectionsRequest {
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(1);
+			return "";
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(1);
+			return "";
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(1);
+			return "";
 		}
-		return "";
 		
 	}
-	public void makeRequests()
-	{
-		drive= makeRequest("Driving");
-		walk= makeRequest("Walking");
-		transit=makeRequest("Transit");
-	}
+
 
 			
 	
