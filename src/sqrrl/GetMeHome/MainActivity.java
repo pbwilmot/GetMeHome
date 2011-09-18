@@ -27,12 +27,32 @@ public class MainActivity extends Activity {
 	
 	double walk,taxi,train;
 	double maxPrice;
+	Settings settings;
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		Bundle extras = intent.getExtras();
+		String address = null;
+		if (extras != null && (address = extras.getString("address")) != null) {
+			// successfully got home address
+			settings = new Settings();
+			settings.home = address;
+			saveSettings();
+		}
+	}
 	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle bun) {
         super.onCreate(bun);
         setContentView(R.layout.main);
+        
+        loadSettings();
+        if (settings == null) {
+        	// open the new settings activity
+        	Intent i = new Intent(this, SettingsActivity.class);
+        	startActivity(i);
+        }
 /*
         TextView tv = new TextView(this);
         tv.setVerticalScrollBarEnabled(true);
@@ -100,19 +120,19 @@ public class MainActivity extends Activity {
     	return loc.getLatitude() + "," + loc.getLongitude();
     }
     
-    private void savePreferences(Settings set) {
+    private void saveSettings() {
     	FileOutputStream stream = null;
     	try {
 			stream = openFileOutput("getmehome.txt", MODE_PRIVATE);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
-			writer.write(set.home);
+			writer.write(settings.home);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
-    private Settings loadSettings() {
+    private void loadSettings() {
     	FileInputStream stream = null;
 		Settings set = new Settings();
     	try {
@@ -123,7 +143,7 @@ public class MainActivity extends Activity {
     	catch (IOException ex) {
     		//ex.printStackTrace();
     	}
-    	return set;
+    	settings = set;
     }
     
     public class Settings {
