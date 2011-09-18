@@ -28,7 +28,8 @@ public class SettingsActivity extends MapActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.putExtra("address", address.getText().toString());
+				intent.putExtra("homeAddress", address.getText().toString());
+				setResult(RESULT_OK, intent);
 				finish();
 			}
 		});

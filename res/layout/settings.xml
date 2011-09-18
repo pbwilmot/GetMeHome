@@ -15,13 +15,13 @@
     <requestFocus></requestFocus>
     </EditText>
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:layout_weight="0.01" android:orientation="vertical" android:gravity="center_horizontal">
-            <com.google.android.maps.MapView
+            <!-- <com.google.android.maps.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
         android:apiKey="Your Maps API Key"
-    />
+    />-->
         <Button android:text="Done" android:id="@+id/done" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
     </LinearLayout>
     </LinearLayout>

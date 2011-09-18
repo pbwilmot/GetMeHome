@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
 
-    </application>
+    <activity android:name="SettingsActivity" android:screenOrientation="unspecified"></activity>
+</application>
 
 <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

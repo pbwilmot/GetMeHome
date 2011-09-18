@@ -2,6 +2,7 @@ package sqrrl.GetMeHome;
 
 import java.io.*;
 import java.util.Date;
+import java.util.prefs.Preferences;
 
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -9,11 +10,13 @@ import com.google.android.maps.MapView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,17 +30,17 @@ public class MainActivity extends Activity {
 	
 	double walk,taxi,train;
 	double maxPrice;
-	Settings settings;
+	String home;
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
 		Bundle extras = intent.getExtras();
-		String address = null;
-		if (extras != null && (address = extras.getString("address")) != null) {
+		if (extras != null && (home = extras.getString("homeAddress")) != null) {
 			// successfully got home address
-			settings = new Settings();
-			settings.home = address;
-			saveSettings();
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+			SharedPreferences.Editor editor = pref.edit();
+			editor.putString("homeAddress", home);
+			editor.commit();
 		}
 	}
 	
@@ -47,11 +50,12 @@ public class MainActivity extends Activity {
         super.onCreate(bun);
         setContentView(R.layout.main);
         
-        loadSettings();
-        if (settings == null) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        home = prefs.getString("homeAddress", null);
+        if (home == null) {
         	// open the new settings activity
         	Intent i = new Intent(this, SettingsActivity.class);
-        	startActivity(i);
+        	startActivityForResult(i, 0);
         }
 /*
         TextView tv = new TextView(this);
@@ -118,32 +122,6 @@ public class MainActivity extends Activity {
     
     private String locationToString(Location loc) {
     	return loc.getLatitude() + "," + loc.getLongitude();
-    }
-    
-    private void saveSettings() {
-    	FileOutputStream stream = null;
-    	try {
-			stream = openFileOutput("getmehome.txt", MODE_PRIVATE);
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
-			writer.write(settings.home);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    private void loadSettings() {
-    	FileInputStream stream = null;
-		Settings set = new Settings();
-    	try {
-    		stream = openFileInput("getmehome.txt");
-    		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-    		set.home = reader.readLine();
-    	}
-    	catch (IOException ex) {
-    		//ex.printStackTrace();
-    	}
-    	settings = set;
     }
     
     public class Settings {
