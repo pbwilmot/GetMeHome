@@ -54,27 +54,6 @@ private HashMap<String, double[]> hm = new HashMap<String, double[]>();
 
 		return fare;
 	}
-	
-	public void getCab(String addr)
-	{
-		sendSMS(addr, "6177715184");  //862442
-	
-	}
-	
-	public void cancelCab()
-	{
-		sendSMS("STOP", "6177715184");  //862442
-
-	}
-	
-    //---sends an SMS message to another device---
-    private void sendSMS(String phoneNumber, String message, Context cntx, Class c)
-    {        
-        PendingIntent pi = PendingIntent.getActivity(cntx, 0,
-            new Intent(cntx, c), 0);                
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, pi, null);        
-    } 
     
     
     

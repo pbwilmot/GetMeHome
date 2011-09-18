@@ -10,6 +10,7 @@ import com.google.android.maps.MapView;
 
 import android.R.drawable;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.SmsManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -91,7 +93,6 @@ public class MainActivity extends Activity {
         image.setImageDrawable(res.getDrawable(imageId));
         imageCaption.setText(res.getString(stringId));
 	}
-	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle bun) {
@@ -145,6 +146,26 @@ public class MainActivity extends Activity {
         walk=routes[1].getTravelDuration();
         train=routes[2].getTravelDuration();
     }
+    
+	public void getCab(String addr)
+	{
+		sendSMS(addr, "6177715184");  //862442
+	
+	}
+	
+	public void cancelCab()
+	{
+		sendSMS("STOP", "6177715184");  //862442
+	}
+	
+    //---sends an SMS message to another device---
+    private void sendSMS(String phoneNumber, String message)
+    {        
+        PendingIntent pi = PendingIntent.getActivity(this, 0,
+            new Intent(this, MainActivity.class), 0);                
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, pi, null);        
+    } 
     
     private void compareTimes() {
     	double min = Double.MAX_VALUE;
