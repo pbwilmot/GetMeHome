@@ -11,6 +11,7 @@ import com.google.android.maps.MapView;
 import android.R.drawable;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -157,7 +160,12 @@ public class MainActivity extends Activity {
 	{
 		sendSMS("STOP", "6177715184");  //862442
 	}
-	
+	private String getOwnNumber()
+	{
+		TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+		  String phonenum = tMgr.getLine1Number();
+		  return phonenum;
+	}
     //---sends an SMS message to another device---
     private void sendSMS(String phoneNumber, String message)
     {        
@@ -166,7 +174,15 @@ public class MainActivity extends Activity {
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumber, null, message, pi, null);        
     } 
-    
+    private void call(String pnumber) {
+    	   try {
+    	       Intent callIntent = new Intent(Intent.ACTION_CALL);
+    	       callIntent.setData(Uri.parse("tel:"+pnumber));
+    	       startActivity(callIntent);
+    	   } catch (ActivityNotFoundException e) {
+    	       Log.e("GetMeHome call failed", "Failed Call", e);
+    	   }
+    }
     private void compareTimes() {
     	double min = Double.MAX_VALUE;
     	int mode = TREE;
@@ -200,6 +216,7 @@ public class MainActivity extends Activity {
 		Location location = locationManager.getLastKnownLocation(provider);
         return location;
     }
+    
     
     private void showMap(Waypoint from, Waypoint to, int mode)
     {
