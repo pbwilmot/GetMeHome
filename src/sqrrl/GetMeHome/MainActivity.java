@@ -124,9 +124,11 @@ public class MainActivity extends Activity {
 	        a.setGPS(currLoc.getLatitude(), currLoc.getLongitude());
 	        
 	        Waypoint b = home;
-	        ProgressDialog pd = ProgressDialog.show(this, "Thinking", "Calculating route...");
+	        //ProgressDialog pd = ProgressDialog.show(this, "Thinking", "Calculating route...");
 	        getBing(a,b);
-	        pd.dismiss();
+	        //BingAsyncTask bat = new BingAsyncTask();
+	        //bat.execute(a, b);
+	        //pd.dismiss();
 	        //showMap(a,b, TAXI);
 	        compareTimes();
         }
@@ -208,7 +210,6 @@ public class MainActivity extends Activity {
     	String timeStr = minutes + "m " + seconds + "s";
     	timeView.setText(timeStr);
     }
-
     
     private Location getCurrentLocation() {
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

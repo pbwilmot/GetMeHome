@@ -1,15 +1,18 @@
-package sqrrl.GetMeHome;
+/*package sqrrl.GetMeHome;
 
 import java.util.Date;
 
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-public class BingAsyncTask extends AsyncTask<Waypoint, Integer, BingAsyncTask.BingAsyncResult> {
-	protected BingAsyncResult doInBackground(Waypoint... points) {
+public class BingAsyncTask extends AsyncTask<BingAsyncResult.BingAsyncParams, Integer, BingAsyncTask.BingAsyncResult> {
+	private BingAsyncParams params;
+	
+	protected BingAsyncResult doInBackground(BingAsyncParams params) {
 		// assume 2 points
-		Waypoint start = points[0];
-		Waypoint end = points[1];
+		this.params = params;
+		Waypoint start = params.start;
+		Waypoint end = params.end;
         DirectionsRequester request = new DirectionsRequester(start,end, new Date(), "Agyyu_epFtQ_RqoTaAFljASv6f16TWTsxF8KBb06X7E5ZADQOCdXi-aj1ZxeSI8u");
         
         RoutesJSONParser routes[]= new RoutesJSONParser[3];
@@ -30,10 +33,15 @@ public class BingAsyncTask extends AsyncTask<Waypoint, Integer, BingAsyncTask.Bi
         res.taxi=routes[0].getTravelDuration();
         res.walk=routes[1].getTravelDuration();
         res.train=routes[2].getTravelDuration();
+        onPostExecute(res);
         return res;
+	}
+
+	public class BingAsyncParams {
+		Waypoint start, end;
 	}
 	public class BingAsyncResult {
 		public double taxi, walk, train;
 		public String error;
 	}
-}
+}*/

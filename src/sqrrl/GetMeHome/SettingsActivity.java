@@ -35,6 +35,7 @@ public class SettingsActivity extends MapActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent();
 				intent.putExtra("homeAddress", address.getText().toString());
+				intent.putExtra("timeValue", seek.getProgress());
 				setResult(RESULT_OK, intent);
 				finish();
 			}

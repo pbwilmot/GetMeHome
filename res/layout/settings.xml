@@ -35,8 +35,7 @@
 <Button android:text="Confirm"
         android:id="@+id/done"
         android:layout_width="wrap_content"
-        android:layout_weight="0.01"
+        android:layout_weight="0.0"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>
