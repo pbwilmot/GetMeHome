@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"  
     android:gravity="center_horizontal" android:weightSum="1">
     <TextView android:layout_width="fill_parent" 
-    	android:text="asdf" 
+    	android:text="" 
     	android:layout_height="wrap_content" 
     	android:layout_weight="0.10" 
     	android:textSize="25dp" 
@@ -28,15 +28,12 @@
         	android:textAppearance="?android:attr/textAppearanceLarge" 
         	android:layout_width="wrap_content"></TextView>
     </LinearLayout>
-<TableLayout android:id="@+id/TableLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_horizontal">
-	<TableRow>
-		<TextView android:text="Time" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-		<TextView android:text="Cost" android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-	</TableRow>
-	<TableRow>	
-		<TextView android:id="@+id/travelTime" android:layout_width="wrap_content" android:text="Infinity" android:layout_height="wrap_content" android:textSize="20dp" android:gravity="center_horizontal"></TextView>
-		<LinearLayout android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">		<TextView android:text="$$$$$" android:id="@+id/travelCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp"></TextView></LinearLayout>
-	</TableRow>
-
-</TableLayout><LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"></LinearLayout>
-</LinearLayout>
+		<LinearLayout orientation="horizontal" android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">
+			<TextView android:id="@+id/timeCaption" android:text="Time" android:layout_height="wrap_content" android:textSize="15dp" android:gravity="center_horizontal" android:layout_width="0dip" android:layout_weight="1" android:layout_gravity="center_horizontal"></TextView>
+			<TextView android:text="Cost" android:id="@+id/costCaption" android:layout_height="wrap_content" android:textSize="15dp" android:layout_width="0dip" android:layout_weight="1" android:gravity="center_horizontal"></TextView>
+		</LinearLayout>
+		<LinearLayout orientation="horizontal" android:id="@+id/LinearLayout03" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">
+			<TextView android:id="@+id/travelTime" android:text="Infinity" android:layout_height="wrap_content" android:textSize="20dp" android:gravity="center_horizontal" android:layout_width="0dip" android:layout_weight="1" android:layout_gravity="center_horizontal"></TextView>
+			<TextView android:text="$$$$$" android:id="@+id/travelCost" android:layout_height="wrap_content" android:textSize="20dp" android:layout_width="0dip" android:layout_weight="1" android:gravity="center_horizontal"></TextView>
+		</LinearLayout>
+		</LinearLayout>
