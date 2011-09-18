@@ -12,6 +12,7 @@
     	android:id="@+id/PhotoLabel" 
     	android:gravity="center|center_horizontal"></TextView>
     <ImageView android:layout_width="wrap_content" 
+    	android:src="@drawable/cab"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"  
         android:scaleType="fitXY"  
@@ -36,4 +37,5 @@
 				android:layout_gravity="center_horizontal" 
 				android:textSize="25dp"></TextView>
 		</LinearLayout>
+		<Button android:layout_weight="0.10" android:layout_height="wrap_content" android:id="@+id/button1" android:text="GO!" android:textSize="25dp" android:layout_width="100dp" android:layout_marginTop="40dp"></Button>
 </LinearLayout>
