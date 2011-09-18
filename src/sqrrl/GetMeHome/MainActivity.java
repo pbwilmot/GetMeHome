@@ -212,13 +212,38 @@ public class MainActivity extends Activity {
 		}
 		
 	}
-	private AlertDialog alert, alert2;
+	private class CallFriendClickListener implements DialogInterface.OnClickListener
+	{
+		public MainActivity activity;
+		public CallFriendClickListener(MainActivity a)
+		{
+			activity=a;
+		}
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			activity.call("7135779828");
+		}
+		
+	}
+	private AlertDialog alert, alert2, friend;
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle bun) {
         super.onCreate(bun);	
         setContentView(R.layout.main);
-        
+        friend = new AlertDialog.Builder(this).create();
+        friend.setTitle("Call a friend!");
+        friend.setMessage("Hit Help! to phone a friend.");
+        friend.setButton2("Not now!", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		} );
+        friend.setButton("Help!", new CallFriendClickListener(this));
         
         Button go = (Button)findViewById(R.id.go);
         alert = new AlertDialog.Builder(this).create();
@@ -264,6 +289,9 @@ public class MainActivity extends Activity {
 					if (currentLocation != null) {
 						showMap(currentLocation, home, currentMode);
 					}
+				}else if(currentMode ==TREE)
+				{
+					friend.show();
 				}
 			}
 		});
