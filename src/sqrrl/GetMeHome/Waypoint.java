@@ -5,9 +5,6 @@ public class Waypoint {
 		double latitude, longitude;
 		String address;
 		public Waypoint(){
-			latitude=0; //defaults
-			longitude=0;
-			
 		}
 		public void setGPS(double d, double e)
 		{

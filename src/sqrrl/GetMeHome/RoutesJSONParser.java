@@ -8,6 +8,7 @@ public class RoutesJSONParser {
 	public RoutesJSONParser(String s)
 	{
 		sjson=s;
+		duration=-1;
 	}
 	public boolean makeJSON()
 	{
