@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:gravity="center_horizontal" android:id="@+id/LinearLayout01" android:layout_height="fill_parent"><TextView android:text="Where is home?" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-</LinearLayout>
+    <LinearLayout android:id="@+id/linearLayout1" 
+    android:orientation="vertical"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent" 
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:layout_width="fill_parent" 
+    android:text="Where is 'home'?" 
+    android:layout_height="wrap_content" 
+    android:textSize="25dp" 
+    android:id="@+id/PhotoLabel" 
+    android:layout_weight="0.01" android:gravity="center|center_horizontal">
+    </TextView>
+    <EditText android:inputType="textPostalAddress" android:id="@+id/addressText" android:contentDescription="Address" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <requestFocus></requestFocus>
+    </EditText>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/linearLayout2" android:layout_weight="0.01" android:orientation="vertical" android:gravity="center_horizontal">
+            <com.google.android.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:apiKey="Your Maps API Key"
+    />
+        <Button android:text="Done" android:id="@+id/done" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+    </LinearLayout>
