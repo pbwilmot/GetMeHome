@@ -12,6 +12,6 @@
         android:adjustViewBounds="true"  
         android:scaleType="fitXY"  
         android:maxHeight="300dp"  
-        android:maxWidth="199dp"  
+        android:maxWidth="199dp" 
         android:id="@+id/Photo" ></ImageView>
 </LinearLayout>
