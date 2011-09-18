@@ -21,16 +21,22 @@
         	android:layout_weight="1"
         	android:apiKey="0oDjj_GC-1czf0U6ywf7PQewe3BhTeFtiZqB-uQ"
     />-->
-    <LinearLayout android:id="@+id/LinearLayout01" android:layout_width="fill_parent" android:layout_height="wrap_content">
    <EditText android:layout_weight="0.01" android:text="" android:layout_width="match_parent" android:contentDescription="Address" android:inputType="textPostalAddress" android:id="@+id/addressText" android:layout_height="wrap_content"></EditText>
+<TextView android:text="How much do you value your time?" android:textSize="20dp" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 
+<TableLayout android:stretchColumns="0" android:id="@+id/TableLayout01" android:layout_height="wrap_content" android:layout_width="wrap_content" android:gravity="center">
+	<TableRow>
+	<SeekBar android:max="500" android:id="@+id/timeValue" android:layout_height="wrap_content" android:layout_width="match_parent"></SeekBar>
 
+<TextView android:padding="3dp" android:textSize="17dp" android:id="@+id/timeValueText" android:layout_width="120dp" android:text="$0.00/min" android:layout_height="wrap_content" android:gravity="right"></TextView>
+</TableRow>
+</TableLayout>
 
-
-</LinearLayout>
 <Button android:text="Confirm"
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_weight="0.01"
         android:layout_height="wrap_content" />
+
+
 </LinearLayout>
