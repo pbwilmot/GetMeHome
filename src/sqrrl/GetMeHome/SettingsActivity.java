@@ -1,9 +1,12 @@
 package sqrrl.GetMeHome;
 
 import java.text.DecimalFormat;
+import java.util.prefs.Preferences;
 
 import android.content.*;
+import android.content.SharedPreferences.Editor;
 import android.os.*;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.*;
 
@@ -29,14 +32,20 @@ public class SettingsActivity extends MapActivity {
 		seek = (SeekBar)findViewById(R.id.timeValue);
 		address = (EditText)findViewById(R.id.addressText);
 		timeValueText = (TextView)findViewById(R.id.timeValueText);
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		address.setText(prefs.getString("homeAddress", ""));
+		seek.setProgress(prefs.getInt("timeValue", 0));
+		
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent();
-				intent.putExtra("homeAddress", address.getText().toString());
-				intent.putExtra("timeValue", seek.getProgress());
-				setResult(RESULT_OK, intent);
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+				Editor editor = prefs.edit();
+				editor.putInt("timeValue", seek.getProgress());
+				editor.putString("homeAddress", address.getText().toString());
+				editor.commit();
 				finish();
 			}
 		});

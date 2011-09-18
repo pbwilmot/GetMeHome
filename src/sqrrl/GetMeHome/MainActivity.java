@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 	double walk,taxi,train;
 	double maxPrice;
 	Waypoint home;
+	int timeValue;
 	
 	final int TAXI = 0;
 	final int TRAIN = 1;
@@ -50,20 +51,22 @@ public class MainActivity extends Activity {
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		if (intent != null) {
+		/*if (intent != null) {
 			Bundle extras = intent.getExtras();
 			// successfully got home address
 			home = new Waypoint();
 			home.address = extras.getString("homeAddress");
+			timeValue = extras.getInt("timeValue");
 			//home.latitude = extras.getString("homeLat");
 			//home.longitude = extras.getString("homeLon");
 			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putString("homeAddress", home.address);
+			editor.putInt("timeValue", timeValue);
 			//editor.putString("homeLat", home.longitude);
 			//editor.putString("homeLon", home.latitude);
 			editor.commit();
-		}
+		}*/
 	}
 	
 	private void setModeDisplay(int mode) {
@@ -97,6 +100,10 @@ public class MainActivity extends Activity {
         image.setImageDrawable(res.getDrawable(imageId));
         imageCaption.setText(res.getString(stringId));
 	}
+	
+	private void calculate() {
+		
+	}
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle bun) {
@@ -105,19 +112,18 @@ public class MainActivity extends Activity {
         
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String homeAddr = prefs.getString("homeAddress", null);
-        if (homeAddr == null) {
+        //if (homeAddr == null) {
         	// open the new settings activity
         	Intent i = new Intent(this, SettingsActivity.class);
         	startActivityForResult(i, 0);
-        }
-        else {
+        	homeAddr = prefs.getString("homeAddress", null);
+        //}
+        if (homeAddr != null) {
         	// assume latitude and longitude are also valid
         	home = new Waypoint();
         	home.address = homeAddr;
-        	//home.latitude = prefs.getString("homeLat", "0");
-        	//home.longitude = prefs.getString("homeLon", "0");
-        }
-        if (home != null) {
+        	timeValue = prefs.getInt("timeValue", 50);
+
 	        //get current loc
 	        currLoc = getCurrentLocation();
 	        Waypoint a = new Waypoint();

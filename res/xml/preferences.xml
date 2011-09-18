@@ -5,4 +5,6 @@
 <EditTextPreference android:shouldDisableView="true" android:key="homeLat"></EditTextPreference>
 <EditTextPreference android:key="homeLon"></EditTextPreference>
 
+
+<Preference android:key="timeValue"></Preference>
 </PreferenceScreen>
