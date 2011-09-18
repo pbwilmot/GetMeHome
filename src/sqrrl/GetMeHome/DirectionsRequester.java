@@ -70,15 +70,15 @@ public class DirectionsRequester {
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "sex"+uri;
+			return "";
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "cock";
+			return "";
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "balls";
+			return "";
 		}
 		
 	}

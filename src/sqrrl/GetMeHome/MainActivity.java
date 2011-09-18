@@ -15,11 +15,18 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	LinearLayout linearLayout;
 	MapView mapView;
+	
+	private Location currLoc;
+	private Location homeLoc;
+	
+	double walk,taxi,train;
+	double maxPrice;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -28,17 +35,38 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 /*
         TextView tv = new TextView(this);
+        tv.setVerticalScrollBarEnabled(true);
+
+        //get home loc
+        //TODO PARSE STUFF FROM FILE maxPrice, homeLoc 
         
-        
+        //get current loc
+        currLoc = getCurrentLocation();
         Waypoint a = new Waypoint();
-        a.setGPS(37.81997, -122.47859);
+        a.setGPS(currLoc.getLatitude(), currLoc.getLongitude());
+        
         Waypoint b= new Waypoint();
         b.setGPS(37.808333, -122.4155556);
         DirectionsRequester request = new DirectionsRequester(a,b, new Date(), "Agyyu_epFtQ_RqoTaAFljASv6f16TWTsxF8KBb06X7E5ZADQOCdXi-aj1ZxeSI8u");
-        tv.setText("begin"+request.makeRequest("Driving")+"end");
+        RoutesJSONParser json = new RoutesJSONParser(request.makeRequest("Driving"));
+        json.makeJSON();
+        if(json.seedData())
+        	tv.setText(""+json.getTravelDuration());
+        else
+        {
+        	tv.setText(""+json.getStatusCode());
+        }
+        //tv.setText(json.prettyJSON());
+        	
         
         
-       // tv.setText("Hello, Android");
+        
+        
+        //TODO get walktime
+        //TODO get taxitime
+        //TODO get traintime
+        
+
         setContentView(tv);
         
         Settings settings = loadSettings();
