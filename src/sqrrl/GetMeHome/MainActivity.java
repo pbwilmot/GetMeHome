@@ -11,6 +11,7 @@ import com.google.android.maps.MapView;
 import android.R.drawable;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -123,7 +124,9 @@ public class MainActivity extends Activity {
 	        a.setGPS(currLoc.getLatitude(), currLoc.getLongitude());
 	        
 	        Waypoint b = home;
+	        ProgressDialog pd = ProgressDialog.show(this, "Thinking", "Calculating route...");
 	        getBing(a,b);
+	        pd.dismiss();
 	        //showMap(a,b, TAXI);
 	        compareTimes();
         }
