@@ -113,7 +113,7 @@ public class MainActivity extends Activity {
         else {
         	// assume latitude and longitude are also valid
         	home = new Waypoint();
-        	home.address = "drexel%20university";//homeAddr;
+        	home.address = homeAddr;
         	//home.latitude = prefs.getString("homeLat", "0");
         	//home.longitude = prefs.getString("homeLon", "0");
         }
@@ -156,19 +156,20 @@ public class MainActivity extends Activity {
 	public void getCab(String addr)
 	{
 		sendSMS(addr, "6177715184");  //862442
-	
 	}
 	
 	public void cancelCab()
 	{
 		sendSMS("STOP", "6177715184");  //862442
 	}
+	
 	private String getOwnNumber()
 	{
 		TelephonyManager tMgr =(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
 		  String phonenum = tMgr.getLine1Number();
 		  return phonenum;
 	}
+	
     //---sends an SMS message to another device---
     private void sendSMS(String phoneNumber, String message)
     {        
