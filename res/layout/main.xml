@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainlayout"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
-    <!--  <com.google.android.maps.MapView
-        android:id="@+id/mapview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true"
-        android:apiKey="0oDjj_GC-1czf0U6ywf7PQewe3BhTeFtiZqB-uQ"
-    />-->
-
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:orientation="vertical"  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:gravity="center_horizontal" android:weightSum="1">
+    <TextView android:layout_width="fill_parent" android:text="Looks like you're walking..." android:layout_height="wrap_content" android:layout_weight="0.10" android:textSize="25dp" android:id="@+id/PhotoLabel" android:gravity="center_horizontal"></TextView>
+    <ImageView  
+        android:layout_width="wrap_content"  
+        android:layout_height="wrap_content"  
+        android:src="@drawable/walking"  
+        android:adjustViewBounds="true"  
+        android:scaleType="fitXY"  
+        android:maxHeight="300dp"  
+        android:maxWidth="199dp"  
+        android:id="@+id/Photo" ></ImageView>
+</LinearLayout>

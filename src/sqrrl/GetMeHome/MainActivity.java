@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle bun) {
         super.onCreate(bun);
         setContentView(R.layout.main);
+/*
         TextView tv = new TextView(this);
         
         
@@ -40,7 +41,6 @@ public class MainActivity extends Activity {
        // tv.setText("Hello, Android");
         setContentView(tv);
         
-        /*
         Settings settings = loadSettings();
         if (settings.home == null) {
         	settings.home = "providence";
