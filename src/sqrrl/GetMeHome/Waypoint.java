@@ -1,5 +1,7 @@
 package sqrrl.GetMeHome;
 
+import android.net.Uri;
+
 public class Waypoint {
 
 		double latitude, longitude;
@@ -38,7 +40,7 @@ public class Waypoint {
 				return getLatLongString();
 			}
 			else
-				return address;
+				return Uri.encode(address);
 		}
 		
 		

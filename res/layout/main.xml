@@ -36,5 +36,5 @@
 				android:layout_gravity="center_horizontal" 
 				android:textSize="25dp"></TextView>
 		</LinearLayout>
-		<Button android:layout_weight="0.10" android:layout_height="wrap_content" android:id="@+id/button1" android:text="GO!" android:textSize="25dp" android:layout_width="100dp" android:layout_marginTop="40dp"></Button>
+		<Button android:layout_weight="0.10" android:layout_height="wrap_content" android:id="@+id/go" android:text="GO!" android:textSize="25dp" android:layout_width="100dp" android:layout_marginTop="40dp"></Button>
 </LinearLayout>

@@ -5,10 +5,12 @@ public class RoutesJSONParser {
 	private JSONObject json;
 	private String sjson;
 	private int statuscode,duration;
+	private double distance;
 	public RoutesJSONParser(String s)
 	{
 		sjson=s;
 		duration=-1;
+		distance = -1;
 	}
 	public boolean makeJSON()
 	{
@@ -38,6 +40,7 @@ public class RoutesJSONParser {
 				JSONObject route= resources.getJSONObject(0);
 				
 				duration= route.getInt("travelDuration");
+				distance= route.getDouble("travelDistance");
 				return true;
 			}
 		} catch (JSONException e) {
@@ -53,6 +56,10 @@ public class RoutesJSONParser {
 	public int getTravelDuration()
 	{
 		return duration; 
+	}
+	public double getTravelDistance() 
+	{
+		return distance*.6214; //conversion to miles
 	}
 	public String prettyJSON()
 	{

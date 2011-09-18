@@ -10,10 +10,12 @@ import com.google.android.maps.MapView;
 
 import android.R.drawable;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,52 +23,49 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.*;
 
 public class MainActivity extends Activity {
 	LinearLayout linearLayout;
 	MapView mapView;
 	
-	private Location currLoc;
-	private Location homeLoc;
-	
-	double walk,taxi,train;
+	double times[];
+	double distances[];
 	double maxPrice;
 	Waypoint home;
+	Waypoint currentLocation;
 	int timeValue;
+	int currentMode = 3;
 	
 	final int TAXI = 0;
 	final int TRAIN = 1;
 	final int WALK = 2;
 	final int TREE = 3;
-	
+	private ProgressDialog progress;
+	private String[] modes = new String[] { "Driving", "Transit", "Walking" };
+	private RoutesJSONParser routes[]= new RoutesJSONParser[3];
+	private String timeStr = "";
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
-		/*if (intent != null) {
-			Bundle extras = intent.getExtras();
-			// successfully got home address
+		if (resultCode == RESULT_OK) {
 			home = new Waypoint();
-			home.address = extras.getString("homeAddress");
-			timeValue = extras.getInt("timeValue");
-			//home.latitude = extras.getString("homeLat");
-			//home.longitude = extras.getString("homeLon");
-			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-			SharedPreferences.Editor editor = pref.edit();
-			editor.putString("homeAddress", home.address);
-			editor.putInt("timeValue", timeValue);
-			//editor.putString("homeLat", home.longitude);
-			//editor.putString("homeLon", home.latitude);
-			editor.commit();
-		}*/
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+	    	home.address = prefs.getString("homeAddress", null);
+	    	timeValue = prefs.getInt("timeValue", 50);
+			beginCalcRoute();
+		}
 	}
 	
 	private void setModeDisplay(int mode) {
@@ -79,7 +78,7 @@ public class MainActivity extends Activity {
 			break;
 		case WALK:
 			imageId = R.drawable.walking;
-			stringId = R.drawable.walking;
+			stringId = R.string.walking;
 			break;
 		case TRAIN:
 			imageId = R.drawable.train;
@@ -99,76 +98,215 @@ public class MainActivity extends Activity {
         Resources res = getResources();
         image.setImageDrawable(res.getDrawable(imageId));
         imageCaption.setText(res.getString(stringId));
-	}
-	
-	private void calculate() {
-		
-	}
-	/** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle bun) {
-        super.onCreate(bun);
-        setContentView(R.layout.main);
-        
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String homeAddr = prefs.getString("homeAddress", null);
-        //if (homeAddr == null) {
-        	// open the new settings activity
-        	Intent i = new Intent(this, SettingsActivity.class);
-        	startActivityForResult(i, 0);
-        	homeAddr = prefs.getString("homeAddress", null);
-        //}
-        if (homeAddr != null) {
-        	// assume latitude and longitude are also valid
-        	home = new Waypoint();
-        	home.address = homeAddr;
-        	timeValue = prefs.getInt("timeValue", 50);
-
-	        //get current loc
-	        currLoc = getCurrentLocation();
-	        Waypoint a = new Waypoint();
-	        a.setGPS(currLoc.getLatitude(), currLoc.getLongitude());
-	        
-	        Waypoint b = home;
-	        //ProgressDialog pd = ProgressDialog.show(this, "Thinking", "Calculating route...");
-	        getBing(a,b);
-	        //BingAsyncTask bat = new BingAsyncTask();
-	        //bat.execute(a, b);
-	        //pd.dismiss();
-	        //showMap(a,b, TAXI);
-	        compareTimes();
+        String costStr;
+        if (mode != 3) {
+    	int hours = (int) (times[currentMode] / 3600);
+    	int minutes = (int)((times[currentMode] - (hours * 3600)) / 60);
+    	int seconds = (int)(times[currentMode] % 60);
+    	timeStr="";
+    	if( hours > 0)
+    		timeStr += hours + "h ";
+    	timeStr += minutes + "m " + seconds + "s";
+    	costStr = "$" + String.valueOf((int)getCost(mode, distances[mode]));
         }
-    }
-    
-    private void getBing(Waypoint start, Waypoint end) {
-        DirectionsRequester request = new DirectionsRequester(start,end, new Date(), "Agyyu_epFtQ_RqoTaAFljASv6f16TWTsxF8KBb06X7E5ZADQOCdXi-aj1ZxeSI8u");
+        else {
+        	timeStr = ":(";
+        	costStr = "One beer";
+        }
+    	((TextView)findViewById(R.id.travelTime)).setText(timeStr);
+    	((TextView)findViewById(R.id.travelCost)).setText(costStr);
+	}
+	Handler h = new Handler() {
+		public void run(Message msg) {
+			compareTimes();
+		}
+	};
+
+	private void getBingPart1() {
+        DirectionsRequester request = new DirectionsRequester(currentLocation,home, new Date(), "Agyyu_epFtQ_RqoTaAFljASv6f16TWTsxF8KBb06X7E5ZADQOCdXi-aj1ZxeSI8u");
         
-        RoutesJSONParser routes[]= new RoutesJSONParser[3];
-        routes[0] = new RoutesJSONParser(request.makeRequest("Driving"));
-        routes[1] = new RoutesJSONParser(request.makeRequest("Walking"));
-        routes[2] = new RoutesJSONParser(request.makeRequest("Transit"));
+        
+        
+        for (int i = 0; i < 3; i++) {
+        	routes[i] = new RoutesJSONParser(request.makeRequest(modes[i]));
+        }
+	}
+    String error = null;
+	private String getBingPart2(){
+
         
         for(int x=0; x< routes.length; x++)
         {	
-        	if(!routes[x].makeJSON()){
-        		Toast.makeText(this, "Problem all potential ways home. Check your data connection.", 5).show();
-        	}else if(!routes[x].seedData()){
-        		Toast.makeText(this, "Bad data from Bing! Blame Microsoft!", 5).show();
+        	if(!routes[x].makeJSON()) {
+        		error = "Could not get a " + modes[x] + " route. Check your data connection.";
+        	}else if(!routes[x].seedData()) {
+        		error = "Bad data from Bing on " + modes[x] + " route! Blame Microsoft!";
         	}
         }
-        taxi=routes[0].getTravelDuration();
-        walk=routes[1].getTravelDuration();
-        train=routes[2].getTravelDuration();
+        
+        times = new double[3];
+        distances = new double[3];
+        
+        for (int i = 0; i < 3; i++) {
+        	times[i] = routes[i].getTravelDuration();
+        	distances[i] = routes[i].getTravelDistance();
+        }
+        return error;
+	}
+		
+	
+	private class BingTask extends AsyncTask<Void, Void, Void>
+	{
+		@Override
+    	protected void onPreExecute()
+    	{
+    	       progress = ProgressDialog.show(MainActivity.this, "Please wait...","Calculating times...");
+    	}
+		protected Void doInBackground(Void... v) {
+
+			getBingPart1();
+			return null;
+		}
+		
+		protected void onPostExecute(Void result) {
+			progress.dismiss();
+		}
+	}
+	private void beginCalcRoute() {
+		// assume latitude and longitude are also valid
+    	
+
+        //get current loc
+        Location currLoc = getCurrentLocation();
+        currentLocation = new Waypoint();
+        currentLocation.setGPS(currLoc.getLatitude(), currLoc.getLongitude());
+
+    	//new BingTask().execute();
+
+        		getBingPart1();
+        		getBingPart2();
+        		compareTimes();
+
+        //TODO:FIX LATER!
+
+		/*Taxi taxi= new Taxi();
+    	setModeDisplay(currentMode);
+    	TextView timeView = (TextView)findViewById(R.id.travelTime);
+    	if(currentMode==TAXI)
+    		((TextView)findViewById(R.id.travelCost)).setText("$"+(int)taxi.calcFare(routes[0].getTravelDistance(), "Philidelphia"));
+    	timeView.setText(timeStr);*/
+        if (error != null)
+        	Toast.makeText(this, error, 5).show();
+	}
+	private class CallCabClickListener implements DialogInterface.OnClickListener
+	{
+		public MainActivity activity;
+		public CallCabClickListener(MainActivity a)
+		{
+			activity=a;
+		}
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			activity.getCab(activity.home.getAddress());
+		}
+		
+	}
+	private AlertDialog alert, alert2;
+	/** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle bun) {
+        super.onCreate(bun);	
+        setContentView(R.layout.main);
+        
+        
+        Button go = (Button)findViewById(R.id.go);
+        alert = new AlertDialog.Builder(this).create();
+        alert.setTitle("Call a cab?");
+        alert.setMessage("We will call a cab to your location if you confirm.");
+        alert.setButton("Okay", new CallCabClickListener(this) {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				alert2= new AlertDialog.Builder(MainActivity.this).create();
+				alert2.setTitle("Confirm");
+				alert2.setMessage("Are you sure you want to call a cab?");
+				alert2.setButton("Yes", new CallCabClickListener(this.activity));
+				alert2.setButton2("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				alert2.show();
+			}
+		});
+        alert.setButton2("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        go.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (currentMode == TAXI) {
+					// pop up taxi context menu
+					alert.show();
+				}
+				else if (currentMode == WALK || currentMode == TRAIN) {
+					if (currentLocation != null) {
+						showMap(currentLocation, home, currentMode);
+					}
+				}
+			}
+		});
+        
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String homeAddr = prefs.getString("homeAddress", null);
+        if (homeAddr == null) {
+        	// open the new settings activity
+        	Intent i = new Intent(this, SettingsActivity.class);
+        	startActivityForResult(i, 0);
+        }
+        else {
+        	home = new Waypoint();
+        	home.address = homeAddr;
+        	timeValue = prefs.getInt("timeValue", 50);
+        	beginCalcRoute();
+        }
     }
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.maincontextmenu, menu);
+    	return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if (item.getItemId() == R.id.settingsButton) {
+    	 	Intent i = new Intent(this, SettingsActivity.class);
+        	startActivityForResult(i, 0);
+        	return true;
+    	}
+    	return super.onOptionsItemSelected(item);
+    }
+    //TODO fix this
     
 	public void getCab(String addr)
 	{
-		sendSMS(addr, "6177715184");  //862442
+		sendSMS(addr, "7134878351");  //862442
 	}
 	
 	public void cancelCab()
 	{
-		sendSMS("STOP", "6177715184");  //862442
+		sendSMS("STOP", "7135779828");  //862442
 	}
 	
 	private String getOwnNumber()
@@ -184,7 +322,20 @@ public class MainActivity extends Activity {
         PendingIntent pi = PendingIntent.getActivity(this, 0,
             new Intent(this, MainActivity.class), 0);                
         SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, pi, null);        
+        sms.sendTextMessage(phoneNumber, null, message, pi, null);
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle("Cab sent!");
+        alert.setMessage("You should receive a confirmation soon!");
+        alert.setButton("Okay!", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        alert.show();
+        
     } 
     private void call(String pnumber) {
     	   try {
@@ -196,26 +347,30 @@ public class MainActivity extends Activity {
     	   }
     }
     private void compareTimes() {
-    	double min = Double.MAX_VALUE;
-    	int mode = TREE;
-    	if (taxi != -1 && taxi < min) {
-    		mode = TAXI;
-    		min = taxi;
+    	double minScore = Double.MAX_VALUE;
+    	currentMode = TREE;
+    	for (int i = 0; i < 3; i++) {
+    		float cost = getCost(i, distances[i]);
+    		double score = times[i] * timeValue + cost;
+    		if (score < minScore && times[i] != -1) {
+    			currentMode = i;
+    			minScore = score;
+    		}
     	}
-    	if (walk != -1 && walk < min) {
-    		mode = WALK;
-    		min = walk;
+    	setModeDisplay(currentMode);
+    }
+    
+    private float getCost(int mode, double distance) {
+    	if (mode == WALK) {
+    		return 0;
     	}
-    	if (train != -1 && train < min) {
-    		mode = TRAIN;
-    		min = train;
+    	if (mode == TRAIN) {
+    		return 2f;
     	}
-    	setModeDisplay(mode);
-    	TextView timeView = (TextView)findViewById(R.id.travelTime);
-    	int minutes = (int)(min / 60);
-    	int seconds = (int)(min % 60);
-    	String timeStr = minutes + "m " + seconds + "s";
-    	timeView.setText(timeStr);
+    	if (mode == TAXI) {
+    		return (float) new Taxi().calcFare(distance, "philadelphia");
+    	}
+    	return 0;
     }
     
     private Location getCurrentLocation() {

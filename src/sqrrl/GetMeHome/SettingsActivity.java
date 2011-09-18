@@ -36,6 +36,7 @@ public class SettingsActivity extends MapActivity {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		address.setText(prefs.getString("homeAddress", ""));
 		seek.setProgress(prefs.getInt("timeValue", 0));
+		updateProgressText();
 		
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -46,6 +47,7 @@ public class SettingsActivity extends MapActivity {
 				editor.putInt("timeValue", seek.getProgress());
 				editor.putString("homeAddress", address.getText().toString());
 				editor.commit();
+				setResult(RESULT_OK);
 				finish();
 			}
 		});
@@ -66,8 +68,14 @@ public class SettingsActivity extends MapActivity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				timeValueText.setText("$" + new DecimalFormat("#.##").format((float)progress / 100) + "/min");
-			}
+				updateProgressText();
+				}
 		});
+		
+
+	}
+	private void updateProgressText() {
+		timeValueText.setText("$" + new DecimalFormat("#.##").format((float)seek.getProgress() / 100) + "/min");
+		
 	}
 }
