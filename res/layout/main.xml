@@ -5,15 +5,14 @@
     android:layout_height="fill_parent"  
     android:gravity="center_horizontal" android:weightSum="1">
     <TextView android:layout_width="fill_parent" 
-    	android:text="Ahoy there cabbie!" 
+    	android:text="asdf" 
     	android:layout_height="wrap_content" 
     	android:layout_weight="0.10" 
     	android:textSize="25dp" 
     	android:id="@+id/PhotoLabel" 
     	android:gravity="center|center_horizontal"></TextView>
     <ImageView android:layout_width="wrap_content"  
-        android:layout_height="wrap_content"  
-        android:src="@drawable/cab"  
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"  
         android:scaleType="fitXY"  
         android:maxHeight="300dp"  
@@ -29,5 +28,15 @@
         	android:textAppearance="?android:attr/textAppearanceLarge" 
         	android:layout_width="wrap_content"></TextView>
     </LinearLayout>
-    <Button android:layout_width="wrap_content" android:text="Directions" android:layout_height="wrap_content" android:layout_weight="0.10" android:id="@+id/button1"></Button>
+<TableLayout android:id="@+id/TableLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_horizontal">
+	<TableRow>
+		<TextView android:text="Time" android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+		<TextView android:text="Cost" android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+	</TableRow>
+	<TableRow>	
+		<TextView android:id="@+id/travelTime" android:layout_width="wrap_content" android:text="Infinity" android:layout_height="wrap_content" android:textSize="20dp" android:gravity="center_horizontal"></TextView>
+		<LinearLayout android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">		<TextView android:text="$$$$$" android:id="@+id/travelCost" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20dp"></TextView></LinearLayout>
+	</TableRow>
+
+</TableLayout><LinearLayout android:id="@+id/LinearLayout01" android:layout_width="wrap_content" android:layout_height="wrap_content"></LinearLayout>
 </LinearLayout>

@@ -2,4 +2,8 @@
 <resources>
     <string name="hello">Hello World, MapViewer!</string>
     <string name="app_name">GetMeHome</string>
+<string name="cab">Ahoy there cabbie!</string>
+<string name="walking">Looks like you\'re walking...</string>
+<string name="train">Get on the train</string>
+<string name="tree">Hug a tree</string>
 </resources>

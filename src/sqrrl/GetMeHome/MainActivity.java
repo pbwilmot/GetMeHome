@@ -8,16 +8,19 @@ import java.util.prefs.Preferences;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
+import android.R.drawable;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,6 +36,11 @@ public class MainActivity extends Activity {
 	double walk,taxi,train;
 	double maxPrice;
 	Waypoint home;
+	
+	final int TAXI = 0;
+	final int TRAIN = 1;
+	final int WALK = 2;
+	final int TREE = 3;
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		super.onActivityResult(requestCode, resultCode, intent);
@@ -52,6 +60,38 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	private void setModeDisplay(int mode) {
+		int imageId =0;
+		int stringId = 0;
+		switch (mode) {
+		case TAXI:
+			imageId = R.drawable.cab;
+			stringId = R.string.cab;
+			break;
+		case WALK:
+			imageId = R.drawable.walking;
+			stringId = R.drawable.walking;
+			break;
+		case TRAIN:
+			imageId = R.drawable.train;
+			stringId = R.string.train;
+			break;
+		case TREE:
+			imageId = R.drawable.tree;
+			stringId = R.string.tree;
+			break;
+		default:
+			// WTF
+			break;
+		}
+        
+        ImageView image = (ImageView)findViewById(R.id.Photo);
+        TextView imageCaption = (TextView)findViewById(R.id.PhotoLabel);
+        Resources res = getResources();
+        image.setImageDrawable(res.getDrawable(imageId));
+        imageCaption.setText(res.getString(stringId));
+	}
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle bun) {
@@ -68,14 +108,10 @@ public class MainActivity extends Activity {
         else {
         	// assume latitude and longitude are also valid
         	home = new Waypoint();
-        	home.address = homeAddr;
+        	home.address = "drexel%20university";//homeAddr;
         	//home.latitude = prefs.getString("homeLat", "0");
         	//home.longitude = prefs.getString("homeLon", "0");
         }
-
-        //get home loc
-        //TODO PARSE STUFF FROM FILE maxPrice, homeLoc 
-        
         if (home != null) {
 	        //get current loc
 	        currLoc = getCurrentLocation();
@@ -84,7 +120,8 @@ public class MainActivity extends Activity {
 	        
 	        Waypoint b = home;
 	        getBing(a,b);
-
+	        //showMap(a,b, TAXI);
+	        compareTimes();
         }
     }
     
@@ -99,26 +136,37 @@ public class MainActivity extends Activity {
         for(int x=0; x< routes.length; x++)
         {	
         	if(!routes[x].makeJSON()){
-        		Toast.makeText(this, "Problem getting data for one or more request. Check your data connection", 5);
+        		Toast.makeText(this, "Problem all potential ways home. Check your data connection.", 5).show();
         	}else if(!routes[x].seedData()){
-        		Toast.makeText(this, "Bad data from Bing! Blame Microsoft!", 5);
+        		Toast.makeText(this, "Bad data from Bing! Blame Microsoft!", 5).show();
         	}
         }
         taxi=routes[0].getTravelDuration();
         walk=routes[1].getTravelDuration();
         train=routes[2].getTravelDuration();
-        
-        
-        //tv.setText(json.prettyJSON());
-        	
-        
-        
-        
-        
-        //TODO get walktime
-        
-        //TODO get taxitime
-        //TODO get traintime        
+    }
+    
+    private void compareTimes() {
+    	double min = Double.MAX_VALUE;
+    	int mode = TREE;
+    	if (taxi != -1 && taxi < min) {
+    		mode = TAXI;
+    		min = taxi;
+    	}
+    	if (walk != -1 && walk < min) {
+    		mode = WALK;
+    		min = walk;
+    	}
+    	if (train != -1 && train < min) {
+    		mode = TRAIN;
+    		min = train;
+    	}
+    	setModeDisplay(mode);
+    	TextView timeView = (TextView)findViewById(R.id.travelTime);
+    	int minutes = (int)(min / 60);
+    	int seconds = (int)(min % 60);
+    	String timeStr = minutes + "m " + seconds + "s";
+    	timeView.setText(timeStr);
     }
 
     
@@ -132,14 +180,26 @@ public class MainActivity extends Activity {
         return location;
     }
     
-    private void showMap(Waypoint from, Waypoint to)
+    private void showMap(Waypoint from, Waypoint to, int mode)
     {
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
-        		Uri.parse("http://maps.google.com/maps?saddr=" + from.getLatLongString() + "&daddr=" + to.getLatLongString() + "&dirflg=w"));
+    	String c = null;
+    	switch (mode)
+    	{
+    	case TAXI:
+    		c = "d";
+    		break;
+    	case TRAIN:
+    		c = "r";
+    		break;
+    	case WALK:
+    		c = "w";
+    		break;
+    	default:
+    		// sad tree :'(--------
+    		break;
+    	}
+    	Intent intent = new Intent(android.content.Intent.ACTION_VIEW, 
+        		Uri.parse("http://maps.google.com/maps?saddr=" + from.getBest() + "&daddr=" + to.getBest() + (c != null ? "&dirflg=" + c : null)));
         startActivity(intent);
-    }
-    
-    private String locationToString(Location loc) {
-    	return loc.getLatitude() + "," + loc.getLongitude();
     }
 }

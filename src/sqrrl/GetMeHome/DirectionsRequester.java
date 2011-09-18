@@ -55,7 +55,7 @@ public class DirectionsRequester {
 			
 			if(hresponse.getStatusLine().getStatusCode()!=200)
 			{
-				System.exit(1);
+				return "";
 			}
 			BufferedReader in= new BufferedReader(new InputStreamReader( hresponse.getEntity().getContent()));
 			StringBuffer sb= new StringBuffer("");
