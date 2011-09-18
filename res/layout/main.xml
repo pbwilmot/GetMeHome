@@ -11,29 +11,29 @@
     	android:textSize="25dp" 
     	android:id="@+id/PhotoLabel" 
     	android:gravity="center|center_horizontal"></TextView>
-    <ImageView android:layout_width="wrap_content"
+    <ImageView android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"  
         android:scaleType="fitXY"  
         android:maxHeight="300dp"  
         android:maxWidth="199dp"
         android:id="@+id/Photo"/>
-    <LinearLayout android:id="@+id/linearLayout1" 
-    	android:layout_height="wrap_content" 
-    	android:layout_width="match_parent" 
-    	android:layout_weight="0.33">
-        <TextView android:text="" 
-        	android:layout_height="wrap_content" 
-        	android:id="@+id/textView1" 
-        	android:textAppearance="?android:attr/textAppearanceLarge" 
-        	android:layout_width="wrap_content"></TextView>
-    </LinearLayout>
-		<LinearLayout orientation="horizontal" android:id="@+id/LinearLayout02" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">
-			<TextView android:id="@+id/timeCaption" android:text="Time" android:layout_height="wrap_content" android:textSize="15dp" android:gravity="center_horizontal" android:layout_width="0dip" android:layout_weight="1" android:layout_gravity="center_horizontal"></TextView>
-			<TextView android:text="Cost" android:id="@+id/costCaption" android:layout_height="wrap_content" android:textSize="15dp" android:layout_width="0dip" android:layout_weight="1" android:gravity="center_horizontal"></TextView>
-		</LinearLayout>
 		<LinearLayout orientation="horizontal" android:id="@+id/LinearLayout03" android:layout_height="wrap_content" android:layout_width="match_parent" android:gravity="right">
-			<TextView android:id="@+id/travelTime" android:text="\?" android:layout_height="wrap_content" android:textSize="20dp" android:gravity="center_horizontal" android:layout_width="0dip" android:layout_weight="1" android:layout_gravity="center_horizontal"></TextView>
-			<TextView android:text="\?" android:id="@+id/travelCost" android:layout_height="wrap_content" android:textSize="20dp" android:layout_width="0dip" android:layout_weight="1" android:gravity="center_horizontal"></TextView>
+			<TextView android:id="@+id/travelTime" 
+				android:text="\?" 
+				android:layout_height="wrap_content" 
+				android:gravity="center_horizontal" 
+				android:layout_width="0dip" 
+				android:layout_weight="1" 
+				android:layout_gravity="center_horizontal" 
+				android:textSize="25dp"></TextView>
+			<TextView android:id="@+id/travelCost" 
+				android:text="\?" 
+				android:layout_height="wrap_content" 
+				android:gravity="center_horizontal" 
+				android:layout_width="0dip" 
+				android:layout_weight="1" 
+				android:layout_gravity="center_horizontal" 
+				android:textSize="25dp"></TextView>
 		</LinearLayout>
-		</LinearLayout>
+</LinearLayout>
