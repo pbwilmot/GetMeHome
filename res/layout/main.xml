@@ -4,14 +4,30 @@
     android:layout_width="fill_parent"  
     android:layout_height="fill_parent"  
     android:gravity="center_horizontal" android:weightSum="1">
-    <TextView android:layout_width="fill_parent" android:text="Looks like you're walking..." android:layout_height="wrap_content" android:layout_weight="0.10" android:textSize="25dp" android:id="@+id/PhotoLabel" android:gravity="center_horizontal"></TextView>
-    <ImageView  
-        android:layout_width="wrap_content"  
+    <TextView android:layout_width="fill_parent" 
+    	android:text="Ahoy there cabbie!" 
+    	android:layout_height="wrap_content" 
+    	android:layout_weight="0.10" 
+    	android:textSize="25dp" 
+    	android:id="@+id/PhotoLabel" 
+    	android:gravity="center|center_horizontal"></TextView>
+    <ImageView android:layout_width="wrap_content"  
         android:layout_height="wrap_content"  
-        android:src="@drawable/walking"  
+        android:src="@drawable/cab"  
         android:adjustViewBounds="true"  
         android:scaleType="fitXY"  
         android:maxHeight="300dp"  
         android:maxWidth="199dp" 
         android:id="@+id/Photo" ></ImageView>
+    <LinearLayout android:id="@+id/linearLayout1" 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="match_parent" 
+    	android:layout_weight="0.33">
+        <TextView android:text="" 
+        	android:layout_height="wrap_content" 
+        	android:id="@+id/textView1" 
+        	android:textAppearance="?android:attr/textAppearanceLarge" 
+        	android:layout_width="wrap_content"></TextView>
+    </LinearLayout>
+    <Button android:layout_width="wrap_content" android:text="Directions" android:layout_height="wrap_content" android:layout_weight="0.10" android:id="@+id/button1"></Button>
 </LinearLayout>
